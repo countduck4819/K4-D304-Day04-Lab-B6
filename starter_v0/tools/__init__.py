@@ -17,6 +17,10 @@ from .policy.tool import search_company_policy
 from .social_search.tool import search_tweets
 from .send.tool import send_telegram
 from .lookup.tool import web_search
+from .wiki.tool import wiki_lookup
+from .hackernews.tool import hn_search
+from .weather.tool import weather_now
+from .currency.tool import currency_convert
 
 
 # NOTE (starter_v0): tool names here are intentionally vague. These keys are the
@@ -35,6 +39,10 @@ TOOL_FUNCTIONS = {
     "policy": search_company_policy,
     "papers": arxiv_search,
     "paper_text": get_arxiv_paper_text,
+    "wiki": wiki_lookup,
+    "hackernews": hn_search,
+    "weather": weather_now,
+    "currency": currency_convert,
 }
 
 

@@ -1,0 +1,81 @@
+{
+  "transcript_id": "ui_v3_openrouter_20260729T163035716914.transcript",
+  "artifact_version": "v3+p02b4329f6b34+t7f067c2faa07",
+  "version": "v3",
+  "provider": "openrouter",
+  "model": "openai/gpt-4o-mini",
+  "created_at": "2026-07-29T16:30:35",
+  "updated_at": "2026-07-29T16:30:35",
+  "turns": [
+    {
+      "turn_index": 1,
+      "started_at": "2026-07-29T16:30:35",
+      "user": "thời tiết hà nội hôm nay",
+      "status": "answered",
+      "assistant_text": "Thời tiết ở Hà Nội hôm nay có mưa vừa hoặc mưa to kèm theo sấm sét, nhiệt độ là 31°C (cảm giác như 36°C), độ ẩm 79%, gió 15 km/h. \n\nBạn có thể xem thêm thông tin chi tiết tại [đây](https://wttr.in/H%C3%A0%20N%E1%BB%99i).",
+      "rounds": [
+        {
+          "round": 1,
+          "assistant_text": null,
+          "tool_calls": [
+            {
+              "name": "weather",
+              "args": {
+                "location": "Hà Nội"
+              }
+            }
+          ],
+          "tool_results": [
+            {
+              "tool": "weather",
+              "args": {
+                "location": "Hà Nội"
+              },
+              "result": {
+                "tool": "weather_now",
+                "location": "Hà Nội",
+                "units": "metric",
+                "items": [
+                  {
+                    "title": "Weather in Hao Nam, Vietnam",
+                    "url": "https://wttr.in/H%C3%A0%20N%E1%BB%99i",
+                    "source": "wttr.in",
+                    "summary": "Moderate or heavy rain with thunder, 31°C (feels 36°C), humidity 79%, wind 15 km/h"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "round": 2,
+          "assistant_text": "Thời tiết ở Hà Nội hôm nay có mưa vừa hoặc mưa to kèm theo sấm sét, nhiệt độ là 31°C (cảm giác như 36°C), độ ẩm 79%, gió 15 km/h. \n\nBạn có thể xem thêm thông tin chi tiết tại [đây](https://wttr.in/H%C3%A0%20N%E1%BB%99i).",
+          "tool_calls": [],
+          "tool_results": []
+        }
+      ],
+      "tool_events": [
+        {
+          "tool": "weather",
+          "args": {
+            "location": "Hà Nội"
+          },
+          "result": {
+            "tool": "weather_now",
+            "location": "Hà Nội",
+            "units": "metric",
+            "items": [
+              {
+                "title": "Weather in Hao Nam, Vietnam",
+                "url": "https://wttr.in/H%C3%A0%20N%E1%BB%99i",
+                "source": "wttr.in",
+                "summary": "Moderate or heavy rain with thunder, 31°C (feels 36°C), humidity 79%, wind 15 km/h"
+              }
+            ]
+          }
+        }
+      ],
+      "ended_at": "2026-07-29T16:30:35"
+    }
+  ]
+}

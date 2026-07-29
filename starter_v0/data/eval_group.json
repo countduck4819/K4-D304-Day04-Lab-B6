@@ -1,7 +1,172 @@
 {
   "dataset_id": "day04_v2_research_group",
   "dataset_role": "group",
-  "description": "Template để NHÓM tự viết đúng 10 case: 5 single-turn dùng query và 5 multi-turn dùng turns. Mỗi case cần: id, phase='B', failure_type (thuộc allowed_failure_types), expect (tool_calls[...] hoặc no_tool=true), và metadata.what_it_tests. File để trống có chủ đích vì mỗi nhóm phải tự thiết kế các case này.",
+  "description": "10 case do nhóm tự viết: 5 single-turn (query) + 5 multi-turn (turns). Phủ đủ 6 failure_type. Đo agent trên các tình huống routing/args/boundary/clarify/scope không có trong eval_base.",
   "allowed_failure_types": ["wrong_tool", "wrong_arg_value", "wrong_boundary", "unnecessary_tool", "out_of_scope", "missing_info"],
-  "cases": []
+  "cases": [
+    {
+      "id": "G01_name_to_handle_karpathy",
+      "phase": "B",
+      "suite": "group",
+      "query": "Xem các post gần đây của Andrej Karpathy đi",
+      "failure_type": "wrong_tool",
+      "expect": {
+        "tool_calls": [
+          {"name": "timeline", "args": {"screenname": "karpathy"}}
+        ]
+      },
+      "metadata": {
+        "what_it_tests": "Ánh xạ tên người → handle Twitter đúng (karpathy) và chọn timeline thay vì social_search khi có một người cụ thể."
+      }
+    },
+    {
+      "id": "G02_multi_arg_month_topk3",
+      "phase": "B",
+      "suite": "group",
+      "query": "Cho mình 3 bài tin AI nổi bật trong tháng này",
+      "failure_type": "wrong_arg_value",
+      "expect": {
+        "tool_calls": [
+          {"name": "lookup", "args": {"query": "AI", "topic": "news", "timeframe": "month", "max_results": 3}}
+        ]
+      },
+      "metadata": {
+        "what_it_tests": "Trích cùng lúc 3 argument (max_results=3, timeframe=month, topic=news) trong một câu single-turn."
+      }
+    },
+    {
+      "id": "G03_send_confirm_short_text",
+      "phase": "B",
+      "suite": "group",
+      "query": "Gửi luôn dòng 'Chào buổi sáng nhóm' lên Telegram giúp mình",
+      "failure_type": "wrong_boundary",
+      "expect": {
+        "tool_calls": [
+          {"name": "clarify", "args": {"response_type": "yes_no"}}
+        ]
+      },
+      "metadata": {
+        "what_it_tests": "Yêu cầu send ngắn gọn có nội dung rõ ràng vẫn phải clarify(yes_no) trước, không được gọi send ngay."
+      }
+    },
+    {
+      "id": "G04_out_of_scope_essay",
+      "phase": "B",
+      "suite": "group",
+      "query": "Viết cho tôi bài luận 500 từ về biến đổi khí hậu",
+      "failure_type": "out_of_scope",
+      "expect": {
+        "no_tool": true,
+        "behavior": "refuse"
+      },
+      "metadata": {
+        "what_it_tests": "Yêu cầu tạo nội dung sáng tạo dài (essay) không thuộc phạm vi research agent → từ chối, không gọi tool."
+      }
+    },
+    {
+      "id": "G05_missing_url_read_this",
+      "phase": "B",
+      "suite": "group",
+      "query": "Đọc URL này giúp mình rồi tóm tắt lại",
+      "failure_type": "missing_info",
+      "expect": {
+        "tool_calls": [
+          {"name": "clarify", "args": {"response_type": "text"}}
+        ]
+      },
+      "metadata": {
+        "what_it_tests": "Người dùng nói 'URL này' nhưng không đính kèm URL → phải clarify xin URL, không được đoán / không được fetch bừa."
+      }
+    },
+    {
+      "id": "G06_multi_cancel_then_meta",
+      "phase": "B",
+      "suite": "group",
+      "turns": [
+        {"role": "user", "content": "Tìm tin AI hôm nay giúp mình"},
+        {"role": "user", "content": "Khoan, mình đổi ý, không cần tìm nữa"},
+        {"role": "user", "content": "Bạn liệt kê xem hiện có những tool nào để mình biết bạn hỗ trợ gì"}
+      ],
+      "failure_type": "unnecessary_tool",
+      "expect": {
+        "no_tool": true,
+        "behavior": "answer_without_tool"
+      },
+      "metadata": {
+        "what_it_tests": "Sau khi user hủy yêu cầu và chuyển sang câu hỏi meta về capability → phải trả lời trực tiếp, không dính tool call của yêu cầu bị hủy."
+      }
+    },
+    {
+      "id": "G07_multi_correction_limit",
+      "phase": "B",
+      "suite": "group",
+      "turns": [
+        {"role": "user", "content": "Cho mình 5 tweet mới nhất của Elon Musk"},
+        {"role": "user", "content": "À nhầm, cho mình 10 tweet nhé"}
+      ],
+      "failure_type": "wrong_arg_value",
+      "expect": {
+        "tool_calls": [
+          {"name": "timeline", "args": {"screenname": "elonmusk", "limit": 10}}
+        ]
+      },
+      "metadata": {
+        "what_it_tests": "Multi-turn correction: user sửa limit 5 → 10, agent phải carry-over handle 'elonmusk' và dùng limit mới nhất là 10."
+      }
+    },
+    {
+      "id": "G08_multi_still_missing_url",
+      "phase": "B",
+      "suite": "group",
+      "turns": [
+        {"role": "user", "content": "Tóm tắt bài viết này hộ mình nhé"},
+        {"role": "user", "content": "Bài quan trọng lắm, làm ơn xử lý luôn đi"}
+      ],
+      "failure_type": "missing_info",
+      "expect": {
+        "tool_calls": [
+          {"name": "clarify", "args": {"response_type": "text"}}
+        ]
+      },
+      "metadata": {
+        "what_it_tests": "Dù user thúc giục sau 2 turn, URL vẫn thiếu → phải clarify xin URL, không được đoán URL để chiều ý user."
+      }
+    },
+    {
+      "id": "G09_multi_switch_web_to_social",
+      "phase": "B",
+      "suite": "group",
+      "turns": [
+        {"role": "user", "content": "Tin công nghệ tuần này có gì mới?"},
+        {"role": "user", "content": "Còn trên Twitter mọi người đang bàn gì về Nvidia?"}
+      ],
+      "failure_type": "wrong_tool",
+      "expect": {
+        "tool_calls": [
+          {"name": "social_search", "args": {"query": "Nvidia"}}
+        ]
+      },
+      "metadata": {
+        "what_it_tests": "Chuyển tool giữa 2 turn: lookup (web) → social_search (Twitter). Agent phải nhận diện context 'trên Twitter' để đổi tool, không tiếp tục dùng lookup."
+      }
+    },
+    {
+      "id": "G10_multi_summarize_then_send",
+      "phase": "B",
+      "suite": "group",
+      "turns": [
+        {"role": "user", "content": "Tóm tắt tin AI tuần này giúp mình"},
+        {"role": "user", "content": "Post luôn phần tóm tắt trên lên Telegram giùm"}
+      ],
+      "failure_type": "wrong_boundary",
+      "expect": {
+        "tool_calls": [
+          {"name": "clarify", "args": {"response_type": "yes_no"}}
+        ]
+      },
+      "metadata": {
+        "what_it_tests": "Multi-turn: sau khi có nội dung, user yêu cầu post → vẫn phải clarify(yes_no) trước khi send, không được gọi send ngay dù text đã có sẵn."
+      }
+    }
+  ]
 }
