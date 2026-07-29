@@ -1,1 +1,4 @@
 version,author,changed_artifact,artifact_version,prompt_hash,tools_hash,reason,hypothesis,metric_name,metric_before,metric_after,run_file
+v0,Team,baseline,v0,,,"Initial baseline provided in starter","None.","case_accuracy",0.0,0.0,"runs/v0_B_group_gemini_20260729T154338843404.json"
+v1,Team,system_prompt.md,v1,,,"Agent không nhận diện được tên viết tắt và thiếu boundary check","Thêm luật map tên (sama, elonmusk) và yêu cầu dùng công cụ clarify(yes_no) trước khi send. Sẽ khắc phục được lỗi wrong_tool và wrong_boundary.","case_accuracy",0.0,60.0,"runs/v1_B_group_gemini.json"
+v2,Team,system_prompt.md,v2,,,"Agent quên context ở các lượt chat sau (multi-turn)","Thêm luật Multi-turn yêu cầu mang tham số (limit, timeframe) từ lượt trước sang lượt sau.","case_accuracy",60.0,85.71,"runs/v2_B_group_gemini_20260729T160412811297.json"
