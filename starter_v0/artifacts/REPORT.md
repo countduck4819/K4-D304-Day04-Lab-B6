@@ -108,7 +108,7 @@ Chi tiết per-run (metric hợp lệ vì `provider_error_cases = 0`, `measured_
 
 File `data/eval_group.json` — 10 case do nhóm tự viết (5 single-turn + 5 multi-turn), phủ đủ 6 `failure_type` cho phép. Group run trên v3: **9/10 pass, case_accuracy 0.90, routing_accuracy 1.0**.
 
-| Case ID | What It Tests | Expected Tool/Behavior | Result |
+| Case ID | What It Tests | Expected Tool/Behavior | Result (v2) |
 |---|---|---|---|
 | G01_name_to_handle_karpathy | Map "Andrej Karpathy" → handle `karpathy`; chọn `timeline` không phải `social_search` | `timeline(screenname="karpathy")` | PASS |
 | G02_multi_arg_month_topk3 | Trích 3 arg cùng lúc (`topic`, `timeframe`, `max_results`) | `lookup(query="AI", topic="news", timeframe="month", max_results=3)` | PASS |
