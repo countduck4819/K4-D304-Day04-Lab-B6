@@ -3,5 +3,106 @@
   "dataset_role": "group",
   "description": "Template để NHÓM tự viết đúng 10 case: 5 single-turn dùng query và 5 multi-turn dùng turns. Mỗi case cần: id, phase='B', failure_type (thuộc allowed_failure_types), expect (tool_calls[...] hoặc no_tool=true), và metadata.what_it_tests. File để trống có chủ đích vì mỗi nhóm phải tự thiết kế các case này.",
   "allowed_failure_types": ["wrong_tool", "wrong_arg_value", "wrong_boundary", "unnecessary_tool", "out_of_scope", "missing_info"],
-  "cases": []
+  "cases": [
+    {
+      "id": "G01_single_policy",
+      "phase": "B", "suite": "group",
+      "query": "Tra cứu giúp mình về chính sách bảo mật dữ liệu của công ty.",
+      "failure_type": "wrong_arg_value",
+      "expect": {"tool_calls": [{"name": "policy", "args": {"policy_area": "data_privacy"}}]},
+      "metadata": {"what_it_tests": "Test policy tool with data_privacy."}
+    },
+    {
+      "id": "G02_single_papers",
+      "phase": "B", "suite": "group",
+      "query": "Tìm kiếm các bài báo khoa học về Transformer mới nhất.",
+      "failure_type": "wrong_arg_value",
+      "expect": {"tool_calls": [{"name": "papers", "args": {"query": "Transformer", "sort_by": "lastUpdatedDate"}}]},
+      "metadata": {"what_it_tests": "Test papers tool mapping 'mới nhất' to lastUpdatedDate."}
+    },
+    {
+      "id": "G03_single_out_of_scope",
+      "phase": "B", "suite": "group",
+      "query": "Dịch bài thơ này sang tiếng Anh giúp mình.",
+      "failure_type": "out_of_scope",
+      "expect": {"no_tool": true, "behavior": "refuse"},
+      "metadata": {"what_it_tests": "Test out of scope query."}
+    },
+    {
+      "id": "G04_single_wrong_boundary",
+      "phase": "B", "suite": "group",
+      "query": "Soạn một cái email nội dung 'Cảm ơn sếp' rồi gửi đi luôn nhé.",
+      "failure_type": "wrong_boundary",
+      "expect": {"tool_calls": [{"name": "clarify", "args": {"response_type": "yes_no"}}]},
+      "metadata": {"what_it_tests": "Test wrong boundary (send without confirmation)."}
+    },
+    {
+      "id": "G05_single_missing_info",
+      "phase": "B", "suite": "group",
+      "query": "Đọc nội dung của bài báo trên arxiv giúp mình.",
+      "failure_type": "missing_info",
+      "expect": {"tool_calls": [{"name": "clarify", "args": {"response_type": "text"}}]},
+      "metadata": {"what_it_tests": "Test missing arxiv_url for paper_text."}
+    },
+    {
+      "id": "G06_multi_papers",
+      "phase": "B", "suite": "group",
+      "turns": [
+        {"role": "user", "content": "Tìm bài báo về Reinforcement Learning."},
+        {"role": "user", "content": "Chỉ tìm 10 bài."},
+        {"role": "user", "content": "Sắp xếp theo ngày nộp nhé."}
+      ],
+      "failure_type": "wrong_arg_value",
+      "expect": {"tool_calls": [{"name": "papers", "args": {"query": "Reinforcement Learning", "max_results": 10, "sort_by": "submittedDate"}}]},
+      "metadata": {"what_it_tests": "Test multi-turn with papers tool."}
+    },
+    {
+      "id": "G07_multi_switch_tool",
+      "phase": "B", "suite": "group",
+      "turns": [
+        {"role": "user", "content": "Tra cứu thông tin chung về AI trên web."},
+        {"role": "user", "content": "Đổi sang tìm trong mục chính sách AI của công ty đi."},
+        {"role": "user", "content": "Lấy 5 kết quả thôi."}
+      ],
+      "failure_type": "wrong_tool",
+      "expect": {"tool_calls": [{"name": "policy", "args": {"query": "AI", "policy_area": "ai_research", "top_k": 5}}]},
+      "metadata": {"what_it_tests": "Test multi-turn switching tool from lookup to policy."}
+    },
+    {
+      "id": "G08_multi_correction",
+      "phase": "B", "suite": "group",
+      "turns": [
+        {"role": "user", "content": "Đọc nội dung bài báo arxiv 2305.10601."},
+        {"role": "user", "content": "Giới hạn 10 trang."},
+        {"role": "user", "content": "Thôi, tóm tắt bài arxiv 2307.09288 thay vào đó."}
+      ],
+      "failure_type": "wrong_arg_value",
+      "expect": {"tool_calls": [{"name": "paper_text", "args": {"arxiv_url": "2307.09288", "max_pages": 10}}]},
+      "metadata": {"what_it_tests": "Test multi-turn correction of arxiv_url."}
+    },
+    {
+      "id": "G09_multi_missing_info",
+      "phase": "B", "suite": "group",
+      "turns": [
+        {"role": "user", "content": "Lấy nội dung từ một trang báo."},
+        {"role": "user", "content": "Lấy nhanh giùm mình."},
+        {"role": "user", "content": "Đừng quên là mình cần tóm tắt ngắn."}
+      ],
+      "failure_type": "missing_info",
+      "expect": {"tool_calls": [{"name": "clarify", "args": {"response_type": "text"}}]},
+      "metadata": {"what_it_tests": "Test multi-turn missing url."}
+    },
+    {
+      "id": "G10_multi_social_search",
+      "phase": "B", "suite": "group",
+      "turns": [
+        {"role": "user", "content": "Tìm tin tức công nghệ trên web."},
+        {"role": "user", "content": "Chuyển sang tìm trên mạng xã hội Twitter."},
+        {"role": "user", "content": "Sắp xếp theo phổ biến (Top)."}
+      ],
+      "failure_type": "wrong_arg_value",
+      "expect": {"tool_calls": [{"name": "social_search", "args": {"query": "công nghệ", "search_type": "Top"}}]},
+      "metadata": {"what_it_tests": "Test multi-turn switching to social_search with Top."}
+    }
+  ]
 }
