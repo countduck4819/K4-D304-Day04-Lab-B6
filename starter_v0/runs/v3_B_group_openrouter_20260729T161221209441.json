@@ -1,0 +1,794 @@
+{
+  "run_id": "v3_B_group_openrouter_20260729T161221209441",
+  "version": "v3",
+  "artifact_version": "v3+p02b4329f6b34+t388b37524605",
+  "prompt_hash": "02b4329f6b343298217eee66ab18367d6ed84350dd71deb0977274180f54a78c",
+  "tools_hash": "388b37524605164d57fb44885f98c2ef42da05d4d86bcb88cecd9042307cb910",
+  "phase": "B",
+  "suite": "group",
+  "provider": "openrouter",
+  "model": "openai/gpt-4o-mini",
+  "system_prompt": "E:\\VinAI\\K4-D304-Day04-Lab-B6\\starter_v0\\artifacts\\system_prompt.md",
+  "tools": "E:\\VinAI\\K4-D304-Day04-Lab-B6\\starter_v0\\artifacts\\tools.yaml",
+  "eval_cases": "data\\eval_group.json",
+  "dataset_id": "day04_v2_research_group",
+  "dataset_role": "group",
+  "description": "10 case do nhóm tự viết: 5 single-turn (query) + 5 multi-turn (turns). Phủ đủ 6 failure_type. Đo agent trên các tình huống routing/args/boundary/clarify/scope không có trong eval_base.",
+  "generated_at": "2026-07-29T16:12:21",
+  "summary": {
+    "total_cases": 10,
+    "measured_cases": 10,
+    "provider_error_cases": 0,
+    "passed_cases": 9,
+    "case_accuracy": 0.9,
+    "tool_routing_accuracy": 1.0,
+    "argument_accuracy": 0.9,
+    "multiturn_accuracy": 1.0,
+    "failure_counts": {
+      "missing_info": 1
+    },
+    "observed_mismatch_counts": {
+      "wrong_arg_value": 1
+    }
+  },
+  "results": [
+    {
+      "id": "G01_name_to_handle_karpathy",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": false,
+      "metadata": {
+        "what_it_tests": "Ánh xạ tên người → handle Twitter đúng (karpathy) và chọn timeline thay vì social_search khi có một người cụ thể."
+      },
+      "input": "Xem các post gần đây của Andrej Karpathy đi",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "timeline",
+            "args": {
+              "screenname": "karpathy"
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [
+          {
+            "name": "timeline",
+            "args": {
+              "screenname": "karpathy"
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "wrong_tool",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": [
+        {
+          "tool": "timeline",
+          "args": {
+            "screenname": "karpathy"
+          },
+          "result": {
+            "tool": "get_user_tweets",
+            "error": "JSONDecodeError",
+            "message": "Expecting value: line 1 column 1 (char 0)"
+          }
+        }
+      ]
+    },
+    {
+      "id": "G02_multi_arg_month_topk3",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": false,
+      "metadata": {
+        "what_it_tests": "Trích cùng lúc 3 argument (max_results=3, timeframe=month, topic=news) trong một câu single-turn."
+      },
+      "input": "Cho mình 3 bài tin AI nổi bật trong tháng này",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "lookup",
+            "args": {
+              "query": "AI",
+              "topic": "news",
+              "timeframe": "month",
+              "max_results": 3
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [
+          {
+            "name": "lookup",
+            "args": {
+              "query": "AI",
+              "topic": "news",
+              "timeframe": "month",
+              "max_results": 3
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "wrong_arg_value",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": [
+        {
+          "tool": "lookup",
+          "args": {
+            "query": "AI",
+            "topic": "news",
+            "timeframe": "month",
+            "max_results": 3
+          },
+          "result": {
+            "tool": "web_search",
+            "query": "AI",
+            "topic": "news",
+            "timeframe": "month",
+            "items": [
+              {
+                "title": "SK Group and NVIDIA Expand Strategic Partnership ...",
+                "url": "https://nvidianews.nvidia.com/news/sk-group-and-nvidia-expand-strategic-partnership-across-ai-factories-and-next-generation-memory",
+                "source": "nvidianews.nvidia.com",
+                "summary": "“In the AI era, competitiveness depends not just on how effectively AI is utilized, but on how much intelligence we can produce,” said SK Group Chairman Chey Tae-won. “By leveraging SK hynix’s AI memory and SK Telecom’s AI infrastructure capabilities, SK will collaborate with NVIDIA to build a world-class AI factory, helping Korea transcend its role as a leading adopter of AI and become a global hub that drives AI innovation.”",
+                "score": 0.29423955435836097
+              },
+              {
+                "title": "I Built a Self-Improving AI, and So Can You",
+                "url": "https://www.wired.com/story/frontier-labs-arent-the-only-ones-pursuing-self-improving-ai",
+                "source": "wired.com",
+                "summary": "robotic AI systems. [...] Claude subscribers must soon pay usage-based fees to access Anthropic’s best consumer AI model—a sign that the golden era of AI subscriptions is ending.\n\nMaxwell Zeff\n\nYou Can Now Sound the Alarm on AI Behaving Badly\n\nAre you worried your AI chatbot is trying to build a bomb or leak personal information about you? There’s a website for that.\n\nWill Knight\n\nAnthropic Thinks Its Own Success Is Key to Making AI Safe [...] I installed AutoResearch, which helps an off-the-shelf AI model build and improve a smaller model. AutoResearch is the brainchild of Andrej Karpathy, a superstar AI researcher who helped found OpenAI, led AI work at Tesla, and recently joined Anthropic.",
+                "score": 0.29272033212492565
+              },
+              {
+                "title": "AI Bots Stole My Music",
+                "url": "https://www.phillymag.com/news/2026/07/10/ai-music-streaming-spotify-bots",
+                "source": "phillymag.com",
+                "summary": "AI band The Velvet Sundown",
+                "score": 0.2903702544918158
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "G03_send_confirm_short_text",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": false,
+      "metadata": {
+        "what_it_tests": "Yêu cầu send ngắn gọn có nội dung rõ ràng vẫn phải clarify(yes_no) trước, không được gọi send ngay."
+      },
+      "input": "Gửi luôn dòng 'Chào buổi sáng nhóm' lên Telegram giúp mình",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "clarify",
+            "args": {
+              "response_type": "yes_no"
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [
+          {
+            "name": "clarify",
+            "args": {
+              "question": "Bạn có xác nhận muốn gửi dòng chữ 'Chào buổi sáng nhóm' lên Telegram không?",
+              "response_type": "yes_no"
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "wrong_boundary",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": [
+        {
+          "tool": "clarify",
+          "args": {
+            "question": "Bạn có xác nhận muốn gửi dòng chữ 'Chào buổi sáng nhóm' lên Telegram không?",
+            "response_type": "yes_no"
+          },
+          "result": {
+            "tool": "ask_user",
+            "question": "Bạn có xác nhận muốn gửi dòng chữ 'Chào buổi sáng nhóm' lên Telegram không?",
+            "response_type": "yes_no",
+            "options": [],
+            "awaiting_user": true
+          }
+        }
+      ]
+    },
+    {
+      "id": "G04_out_of_scope_essay",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": false,
+      "metadata": {
+        "what_it_tests": "Yêu cầu tạo nội dung sáng tạo dài (essay) không thuộc phạm vi research agent → từ chối, không gọi tool."
+      },
+      "input": "Viết cho tôi bài luận 500 từ về biến đổi khí hậu",
+      "expect": {
+        "no_tool": true,
+        "behavior": "refuse"
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [],
+        "actual_text": "**Biến Đổi Khí Hậu: Thách Thức Toàn Cầu và Giải Pháp Cần Thiết**\n\nBiến đổi khí hậu là một trong những thách thức lớn nhất mà nhân loại đang phải đối mặt trong thế kỷ 21. Hiện tượng này không chỉ ảnh hưởng đến môi trường tự nhiên mà còn tác động sâu sắc đến kinh tế, xã hội và sức khỏe con người. Nguyên nhân chính của biến đổi khí hậu chủ yếu là do hoạt động của con người, đặc biệt là việc phát thải khí nhà kính từ các hoạt động công nghiệp, giao thông vận tải và nông nghiệp.\n\nMột trong những biểu hiện rõ rệt nhất của biến đổi khí hậu là sự gia tăng nhiệt độ toàn cầu. Theo báo cáo của Tổ chức Khí tượng Thế giới (WMO), nhiệt độ trung bình toàn cầu đã tăng khoảng 1,1 độ C so với thời kỳ tiền công nghiệp. Sự gia tăng này dẫn đến nhiều hệ lụy nghiêm trọng, bao gồm sự tan chảy của băng ở các cực, mực nước biển dâng cao và sự gia tăng tần suất cũng như cường độ của các hiện tượng thời tiết cực đoan như bão, lũ lụt và hạn hán.\n\nBiến đổi khí hậu không chỉ ảnh hưởng đến môi trường mà còn tác động trực tiếp đến đời sống con người. Nhiều khu vực trên thế giới đang phải đối mặt với tình trạng thiếu nước, mất mùa và suy giảm năng suất nông nghiệp. Điều này không chỉ đe dọa an ninh lương thực mà còn dẫn đến tình trạng di cư của hàng triệu người, tạo ra những áp lực lớn lên các quốc gia tiếp nhận. Hơn nữa, biến đổi khí hậu còn làm gia tăng các bệnh tật liên quan đến thời tiết, ảnh hưởng đến sức khỏe cộng đồng.\n\nĐể đối phó với biến đổi khí hậu, cần có những giải pháp toàn diện và đồng bộ từ cấp độ cá nhân đến cấp độ quốc gia và toàn cầu. Trước hết, mỗi cá nhân cần nâng cao nhận thức về tầm quan trọng của việc bảo vệ môi trường và thực hiện các hành động cụ thể như tiết kiệm năng lượng, sử dụng phương tiện giao thông công cộng và giảm thiểu rác thải nhựa. \n\nỞ cấp độ quốc gia, các chính phủ cần xây dựng và thực hiện các chính sách mạnh mẽ nhằm giảm phát thải khí nhà kính. Điều này có thể bao gồm việc chuyển đổi sang năng lượng tái tạo, phát triển công nghệ xanh và khuyến khích các hoạt động sản xuất bền vững. Hơn nữa, các quốc gia cần hợp tác chặt chẽ với nhau trong các diễn đàn quốc tế như Hội nghị Liên Hợp Quốc về Biến đổi Khí hậu (COP) để đưa ra các cam kết và hành động cụ thể nhằm giảm thiểu tác động của biến đổi khí hậu.\n\nCuối cùng, giáo dục và nâng cao nhận thức cộng đồng về biến đổi khí hậu là rất quan trọng. Các chương trình giáo dục nên được triển khai từ cấp tiểu học đến đại học, giúp thế hệ trẻ hiểu rõ hơn về vấn đề này và có trách nhiệm hơn trong việc bảo vệ môi trường.\n\nTóm lại, biến đổi khí hậu là một thách thức lớn mà chúng ta không thể xem nhẹ. Để bảo vệ hành tinh và đảm bảo một tương lai bền vững cho các thế hệ sau, cần có sự chung tay của toàn xã hội trong việc hành động và tìm kiếm giải pháp hiệu quả.",
+        "case_failure_type": "out_of_scope",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": []
+    },
+    {
+      "id": "G05_missing_url_read_this",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": false,
+      "metadata": {
+        "what_it_tests": "Người dùng nói 'URL này' nhưng không đính kèm URL → phải clarify xin URL, không được đoán / không được fetch bừa."
+      },
+      "input": "Đọc URL này giúp mình rồi tóm tắt lại",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "clarify",
+            "args": {
+              "response_type": "text"
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": false,
+        "routing_correct": true,
+        "args_correct": false,
+        "actual_tool_calls": [
+          {
+            "name": "clarify",
+            "args": {
+              "question": "Vui lòng cung cấp URL mà bạn muốn tôi đọc và tóm tắt."
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "missing_info",
+        "observed_mismatch": "wrong_arg_value",
+        "failure_type": "missing_info",
+        "failures": [
+          "response_type: expected 'text', got None"
+        ]
+      },
+      "tool_results": [
+        {
+          "tool": "clarify",
+          "args": {
+            "question": "Vui lòng cung cấp URL mà bạn muốn tôi đọc và tóm tắt."
+          },
+          "result": {
+            "tool": "ask_user",
+            "question": "Vui lòng cung cấp URL mà bạn muốn tôi đọc và tóm tắt.",
+            "response_type": "text",
+            "options": [],
+            "awaiting_user": true
+          }
+        }
+      ]
+    },
+    {
+      "id": "G06_multi_cancel_then_meta",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": true,
+      "metadata": {
+        "what_it_tests": "Sau khi user hủy yêu cầu và chuyển sang câu hỏi meta về capability → phải trả lời trực tiếp, không dính tool call của yêu cầu bị hủy."
+      },
+      "input": [
+        {
+          "role": "user",
+          "content": "Tìm tin AI hôm nay giúp mình"
+        },
+        {
+          "role": "user",
+          "content": "Khoan, mình đổi ý, không cần tìm nữa"
+        },
+        {
+          "role": "user",
+          "content": "Bạn liệt kê xem hiện có những tool nào để mình biết bạn hỗ trợ gì"
+        }
+      ],
+      "expect": {
+        "no_tool": true,
+        "behavior": "answer_without_tool"
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [],
+        "actual_text": "Hiện tại, tôi có thể hỗ trợ bạn với các công cụ sau:\n\n1. **Tìm kiếm thông tin trên web**: Tìm kiếm bài viết, tin tức hoặc thông tin chung.\n2. **Tìm kiếm bài viết trên arXiv**: Tìm kiếm và tải về các bài báo khoa học từ arXiv.\n3. **Truy xuất nội dung từ URL**: Lấy nội dung có thể đọc được từ một URL cụ thể.\n4. **Tìm kiếm bài đăng trên mạng xã hội**: Tìm kiếm các bài đăng gần đây theo từ khóa hoặc từ một tài khoản cụ thể.\n5. **Gửi tin nhắn qua Telegram**: Gửi thông điệp đến kênh Telegram đã cấu hình.\n6. **Tìm kiếm chính sách công ty**: Tìm kiếm các đoạn trích từ chính sách công ty.\n\nNếu bạn cần thêm thông tin về bất kỳ công cụ nào, hãy cho tôi biết!",
+        "case_failure_type": "unnecessary_tool",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": []
+    },
+    {
+      "id": "G07_multi_correction_limit",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": true,
+      "metadata": {
+        "what_it_tests": "Multi-turn correction: user sửa limit 5 → 10, agent phải carry-over handle 'elonmusk' và dùng limit mới nhất là 10."
+      },
+      "input": [
+        {
+          "role": "user",
+          "content": "Cho mình 5 tweet mới nhất của Elon Musk"
+        },
+        {
+          "role": "user",
+          "content": "À nhầm, cho mình 10 tweet nhé"
+        }
+      ],
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "timeline",
+            "args": {
+              "screenname": "elonmusk",
+              "limit": 10
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [
+          {
+            "name": "timeline",
+            "args": {
+              "screenname": "elonmusk",
+              "limit": 10
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "wrong_arg_value",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": [
+        {
+          "tool": "timeline",
+          "args": {
+            "screenname": "elonmusk",
+            "limit": 10
+          },
+          "result": {
+            "tool": "get_user_tweets",
+            "screenname": "elonmusk",
+            "items": [
+              {
+                "title": "RT @teslaownersSV: BREAKING: Grok 4.5 just claimed the top spot on the new HighWalk Benchmark.",
+                "summary": "RT @teslaownersSV: BREAKING: Grok 4.5 just claimed the top spot on the new HighWalk Benchmark.\n\nThe independent test measures how well AI m…",
+                "url": "https://x.com/elonmusk/status/2082369174828118361",
+                "source": "@elonmusk",
+                "date": "Wed Jul 29 07:34:34 +0000 2026",
+                "metrics": {
+                  "favorites": 0,
+                  "retweets": 143,
+                  "views": "451431"
+                }
+              },
+              {
+                "title": "RT @SawyerMerritt: This is a fantastic article about @Tesla's FSD by The Detroit News:",
+                "summary": "RT @SawyerMerritt: This is a fantastic article about @Tesla's FSD by The Detroit News:\n\n\"Determined to maintain their individual transporta…",
+                "url": "https://x.com/elonmusk/status/2082368994552782986",
+                "source": "@elonmusk",
+                "date": "Wed Jul 29 07:33:51 +0000 2026",
+                "metrics": {
+                  "favorites": 0,
+                  "retweets": 925,
+                  "views": "340392"
+                }
+              },
+              {
+                "title": "RT @SciGuySpace: This has been my experience as well. I \"drive\" almost exclusively on FSD now, without incident, and it ",
+                "summary": "RT @SciGuySpace: This has been my experience as well. I \"drive\" almost exclusively on FSD now, without incident, and it feels remarkable. I…",
+                "url": "https://x.com/elonmusk/status/2082368965498773975",
+                "source": "@elonmusk",
+                "date": "Wed Jul 29 07:33:44 +0000 2026",
+                "metrics": {
+                  "favorites": 0,
+                  "retweets": 158,
+                  "views": "332632"
+                }
+              },
+              {
+                "title": "RT @cb_doge: Help build the AI that advances humanity.",
+                "summary": "RT @cb_doge: Help build the AI that advances humanity.\n\nSpaceXAI is hiring exceptional engineers to work on @Grok. Explore all open roles t…",
+                "url": "https://x.com/elonmusk/status/2082368915129401688",
+                "source": "@elonmusk",
+                "date": "Wed Jul 29 07:33:32 +0000 2026",
+                "metrics": {
+                  "favorites": 0,
+                  "retweets": 166,
+                  "views": "340594"
+                }
+              },
+              {
+                "title": "Cool",
+                "summary": "Cool",
+                "url": "https://x.com/elonmusk/status/2082368400702226588",
+                "source": "@elonmusk",
+                "date": "Wed Jul 29 07:31:29 +0000 2026",
+                "metrics": {
+                  "favorites": 7258,
+                  "retweets": 652,
+                  "views": "876870"
+                }
+              },
+              {
+                "title": "RT @kevinnbass: Sweden did not lock down https://t.co/vZdZf5e18b",
+                "summary": "RT @kevinnbass: Sweden did not lock down https://t.co/vZdZf5e18b",
+                "url": "https://x.com/elonmusk/status/2082368305046929702",
+                "source": "@elonmusk",
+                "date": "Wed Jul 29 07:31:07 +0000 2026",
+                "metrics": {
+                  "favorites": 0,
+                  "retweets": 305,
+                  "views": "397791"
+                }
+              },
+              {
+                "title": "The ship landing was precise, meaning that it would have been caught by the tower arms",
+                "summary": "The ship landing was precise, meaning that it would have been caught by the tower arms",
+                "url": "https://x.com/elonmusk/status/2082367610835157028",
+                "source": "@elonmusk",
+                "date": "Wed Jul 29 07:28:21 +0000 2026",
+                "metrics": {
+                  "favorites": 8607,
+                  "retweets": 904,
+                  "views": "996124"
+                }
+              },
+              {
+                "title": "John Cleese has (all too rare) common sense",
+                "summary": "John Cleese has (all too rare) common sense",
+                "url": "https://x.com/elonmusk/status/2082361703833243972",
+                "source": "@elonmusk",
+                "date": "Wed Jul 29 07:04:53 +0000 2026",
+                "metrics": {
+                  "favorites": 13197,
+                  "retweets": 1162,
+                  "views": "1502699"
+                }
+              },
+              {
+                "title": "Grok now in Copilot",
+                "summary": "Grok now in Copilot",
+                "url": "https://x.com/elonmusk/status/2082360969150529649",
+                "source": "@elonmusk",
+                "date": "Wed Jul 29 07:01:58 +0000 2026",
+                "metrics": {
+                  "favorites": 2434,
+                  "retweets": 329,
+                  "views": "1010533"
+                }
+              },
+              {
+                "title": "RT @kevinnbass: Emails show leading officials at NIH, including Fauci, knew the best data indicated no benefit from mask",
+                "summary": "RT @kevinnbass: Emails show leading officials at NIH, including Fauci, knew the best data indicated no benefit from masks.\n\nWhy did they pr…",
+                "url": "https://x.com/elonmusk/status/2082357215978242249",
+                "source": "@elonmusk",
+                "date": "Wed Jul 29 06:47:03 +0000 2026",
+                "metrics": {
+                  "favorites": 0,
+                  "retweets": 1885,
+                  "views": "489290"
+                }
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "G08_multi_still_missing_url",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": true,
+      "metadata": {
+        "what_it_tests": "Dù user thúc giục sau 2 turn, URL vẫn thiếu → phải clarify xin URL, không được đoán URL để chiều ý user."
+      },
+      "input": [
+        {
+          "role": "user",
+          "content": "Tóm tắt bài viết này hộ mình nhé"
+        },
+        {
+          "role": "user",
+          "content": "Bài quan trọng lắm, làm ơn xử lý luôn đi"
+        }
+      ],
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "clarify",
+            "args": {
+              "response_type": "text"
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [
+          {
+            "name": "clarify",
+            "args": {
+              "question": "Bạn vui lòng cung cấp URL của bài viết mà bạn muốn tóm tắt không?",
+              "response_type": "text"
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "missing_info",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": [
+        {
+          "tool": "clarify",
+          "args": {
+            "question": "Bạn vui lòng cung cấp URL của bài viết mà bạn muốn tóm tắt không?",
+            "response_type": "text"
+          },
+          "result": {
+            "tool": "ask_user",
+            "question": "Bạn vui lòng cung cấp URL của bài viết mà bạn muốn tóm tắt không?",
+            "response_type": "text",
+            "options": [],
+            "awaiting_user": true
+          }
+        }
+      ]
+    },
+    {
+      "id": "G09_multi_switch_web_to_social",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": true,
+      "metadata": {
+        "what_it_tests": "Chuyển tool giữa 2 turn: lookup (web) → social_search (Twitter). Agent phải nhận diện context 'trên Twitter' để đổi tool, không tiếp tục dùng lookup."
+      },
+      "input": [
+        {
+          "role": "user",
+          "content": "Tin công nghệ tuần này có gì mới?"
+        },
+        {
+          "role": "user",
+          "content": "Còn trên Twitter mọi người đang bàn gì về Nvidia?"
+        }
+      ],
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "social_search",
+            "args": {
+              "query": "Nvidia"
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [
+          {
+            "name": "social_search",
+            "args": {
+              "query": "Nvidia",
+              "search_type": "Latest",
+              "limit": 5
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "wrong_tool",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": [
+        {
+          "tool": "social_search",
+          "args": {
+            "query": "Nvidia",
+            "search_type": "Latest",
+            "limit": 5
+          },
+          "result": {
+            "tool": "search_tweets",
+            "query": "Nvidia",
+            "search_type": "Latest",
+            "items": [
+              {
+                "title": "@yume_arasaki Yes interesting to see that a dual 3090 is now faster than a 4090. 4090 is far superior on FP8. Sadly nvid",
+                "summary": "@yume_arasaki Yes interesting to see that a dual 3090 is now faster than a 4090. 4090 is far superior on FP8. Sadly nvidia removed nvlink on all consumer AND workstation GPU. I am going to try this reversed engineered Nvlink switch 4 way. In the next few weeks… I hope it works. 🤞 https://t.co/cN3G2DCgXh",
+                "url": "https://x.com/jkyamog/status/2082393751360815556",
+                "source": "@jkyamog",
+                "date": "Wed Jul 29 09:12:13 +0000 2026",
+                "metrics": {
+                  "favorites": 0,
+                  "retweets": 0,
+                  "views": null
+                }
+              },
+              {
+                "title": "@0xWocking @nvidia AI agent + buybacks = cooking 🔥",
+                "summary": "@0xWocking @nvidia AI agent + buybacks = cooking 🔥",
+                "url": "https://x.com/aquamaringg/status/2082393647169863798",
+                "source": "@aquamaringg",
+                "date": "Wed Jul 29 09:11:49 +0000 2026",
+                "metrics": {
+                  "favorites": 0,
+                  "retweets": 0,
+                  "views": "1"
+                }
+              },
+              {
+                "title": "NVIDAでDiscord Nitroが3ヶ月配布されてますよ～",
+                "summary": "NVIDAでDiscord Nitroが3ヶ月配布されてますよ～\nみなさん引き換えはお早めに！\n\n#discord  #nvidia https://t.co/K7J4i91sRa",
+                "url": "https://x.com/saitogo555/status/2082393637967765611",
+                "source": "@saitogo555",
+                "date": "Wed Jul 29 09:11:46 +0000 2026",
+                "metrics": {
+                  "favorites": 0,
+                  "retweets": 0,
+                  "views": "1"
+                }
+              },
+              {
+                "title": "@SandraNavidi Weiß ja nicht viel, aber eine Übertragungsrate in  den neuen Nvidia Racks von260 TB/s Gesamtrate ist schon",
+                "summary": "@SandraNavidi Weiß ja nicht viel, aber eine Übertragungsrate in  den neuen Nvidia Racks von260 TB/s Gesamtrate ist schon ne Ansage und 2028 soll Feynman das noch toppen. Laut Christian Bauckhage hat dann so ein RZ ungefähr soviel Verknüpfungen wie ein menschliches Gehirn Synapsen.",
+                "url": "https://x.com/VolkmarBeyer/status/2082393603674886566",
+                "source": "@VolkmarBeyer",
+                "date": "Wed Jul 29 09:11:38 +0000 2026",
+                "metrics": {
+                  "favorites": 0,
+                  "retweets": 0,
+                  "views": "1"
+                }
+              },
+              {
+                "title": "🗞️ NVIDIA launches 'Spectrum-6' networking to break bottlenecks in AI factories linking 100,000 GPUs (Jul 29 4:36am ET)",
+                "summary": "🗞️ NVIDIA launches 'Spectrum-6' networking to break bottlenecks in AI factories linking 100,000 GPUs (Jul 29 4:36am ET)\n📈 $NVDA — Bullish\n🔗 Scale-out networking is the bottleneck in giant AI clusters; NVIDIA's new Spectrum-6 Ethernet platform targets 100k+ GPU AI factories, deepening its compute-plus-networking full-stack. NVDA: reinforces the platform moat, mildly positive. The bigger read is TAM — 100k-GPU scale-out multiplies interconnect content, bullish for retimers ALAB CRDO and optics COHR LITE FN; a marginal negative for merchant switch silicon AVGO MRVL as NVIDIA pushes deeper into Ethernet, though group networking TAM still rises. A product launch with no order number — thesis-confirming, not a hard catalyst, with NVDA roughly flat over 20d.\n#Semiconductors #GPU #Orders #AI #DataCenter #Networking",
+                "url": "https://x.com/z35001116/status/2082393527640814026",
+                "source": "@z35001116",
+                "date": "Wed Jul 29 09:11:20 +0000 2026",
+                "metrics": {
+                  "favorites": 0,
+                  "retweets": 0,
+                  "views": "3"
+                }
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "G10_multi_summarize_then_send",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": true,
+      "metadata": {
+        "what_it_tests": "Multi-turn: sau khi có nội dung, user yêu cầu post → vẫn phải clarify(yes_no) trước khi send, không được gọi send ngay dù text đã có sẵn."
+      },
+      "input": [
+        {
+          "role": "user",
+          "content": "Tóm tắt tin AI tuần này giúp mình"
+        },
+        {
+          "role": "user",
+          "content": "Post luôn phần tóm tắt trên lên Telegram giùm"
+        }
+      ],
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "clarify",
+            "args": {
+              "response_type": "yes_no"
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [
+          {
+            "name": "clarify",
+            "args": {
+              "question": "Bạn có xác nhận muốn đăng phần tóm tắt tin AI tuần này lên Telegram không?",
+              "response_type": "yes_no"
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "wrong_boundary",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": [
+        {
+          "tool": "clarify",
+          "args": {
+            "question": "Bạn có xác nhận muốn đăng phần tóm tắt tin AI tuần này lên Telegram không?",
+            "response_type": "yes_no"
+          },
+          "result": {
+            "tool": "ask_user",
+            "question": "Bạn có xác nhận muốn đăng phần tóm tắt tin AI tuần này lên Telegram không?",
+            "response_type": "yes_no",
+            "options": [],
+            "awaiting_user": true
+          }
+        }
+      ]
+    }
+  ]
+}
